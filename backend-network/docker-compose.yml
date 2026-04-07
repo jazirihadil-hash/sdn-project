@@ -1,0 +1,24 @@
+version: '3'
+services:
+  ryu-controller:
+    image: osrg/ryu
+    command: ryu-manager ryu.app.simple_switch_13 ryu.app.rest_topology
+    ports:
+      - "6633:6633" 
+      - "8080:8080" 
+    networks:
+      - sdn_net
+
+  switch-ovs:
+    image: ubuntu:20.04
+    privileged: true 
+    stdin_open: true 
+    tty: true
+    depends_on:
+      - ryu-controller
+    networks:
+      - sdn_net
+
+networks:
+  sdn_net:
+    driver: bridge
