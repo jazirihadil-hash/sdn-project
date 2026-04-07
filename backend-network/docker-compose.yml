@@ -1,4 +1,3 @@
-version: '3'
 services:
   ryu-controller:
     image: osrg/ryu
@@ -10,10 +9,11 @@ services:
       - sdn_net
 
   switch-ovs:
-    image: ubuntu:20.04
-    privileged: true 
-    stdin_open: true 
-    tty: true
+    build: .
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
     depends_on:
       - ryu-controller
     networks:
