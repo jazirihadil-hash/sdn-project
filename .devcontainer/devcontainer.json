@@ -1,0 +1,8 @@
+{
+  "name": "SDN Flutter Dashboard",
+  "image": "mcr.microsoft.com/devcontainers/universal:latest",
+  "features": {
+    "ghcr.io/devcontainers/features/flutter:latest": {}
+  },
+  "forwardPorts": [3000, 8080]
+}

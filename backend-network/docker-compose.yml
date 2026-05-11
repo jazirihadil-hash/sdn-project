@@ -1,24 +1,45 @@
 services:
   ryu-controller:
     image: osrg/ryu
-    command: ryu-manager ryu.app.simple_switch_13 ryu.app.rest_topology
+    command: ryu-manager --verbose ryu.app.simple_switch_13 ryu.app.rest_topology
     ports:
-      - "6633:6633" 
-      - "8080:8080" 
+      - "6633:6633"
+      - "8080:8080"
     networks:
       - sdn_net
 
-  switch-ovs:
+  switch-ovs-1:
     build: .
+    container_name: switch-ovs-1
     privileged: true
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
+    environment:
+      - REMOTE_IP=172.20.0.11
     depends_on:
       - ryu-controller
     networks:
-      - sdn_net
+      sdn_net:
+        ipv4_address: 172.20.0.10
+
+  switch-ovs-2:
+    build: .
+    container_name: switch-ovs-2
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - REMOTE_IP=172.20.0.10
+    depends_on:
+      - ryu-controller
+    networks:
+      sdn_net:
+        ipv4_address: 172.20.0.11
 
 networks:
   sdn_net:
-    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
